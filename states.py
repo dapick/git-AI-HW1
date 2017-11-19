@@ -1,8 +1,10 @@
 import abc
 
+
 class State(metaclass=abc.ABCMeta):
     def __init__(self):
         pass
+
 
 class MapState(State):
     junctionIdx = None
@@ -17,6 +19,7 @@ class MapState(State):
 
     def __eq__(self, other):
         return self.junctionIdx == other.junctionIdx
+
 
 class BusState(State):
     junctionIdx = None
