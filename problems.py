@@ -95,21 +95,21 @@ class BusProblem(Problem):
 
     # Get the new state created after going from one state to a new location (on map)
     def _getNewStateAtLoc(self, previousState, newLoc):
-        # TODO : Implement
-        orders_source_pick_up = \
-            list(map(lambda waiting_order:
-                     waiting_order if waiting_order[0] == newLoc else None,
-                     previousState.waitingOrders))
-        orders_target_put_down = \
-            list(map(lambda on_bus_order:
-                     on_bus_order if on_bus_order[1] == newLoc else None,
-                     previousState.ordersOnBus))
-        newWaiting = \
-            list(map(lambda waiting_order:
-                     waiting_order if waiting_order not in orders_source_pick_up else None,
-                     previousState.waitingOrders))
-        newOnBus = previousState.ordersOnBus + orders_target_put_down
+        newWaiting = []
+        newOnBus = []
         newFinished = []
+        for order in previousState.waitingOrders :
+            if order[0]==newLoc:
+                newOnBus.append(order)
+            else:
+                newWaiting.append(order)
+        for order in previousState.ordersOnBus:
+            if order[1]==newLoc:
+                newFinished.append(order)
+            else:
+                newOnBus.append(order)
+        newFinished.extend(previousState.finishedOrders)
+
 
         return BusState(newLoc, newWaiting, newOnBus, newFinished)
 
@@ -133,6 +133,15 @@ class BusProblem(Problem):
 from consts import Consts
 
 
-prob = BusProblem.load(Consts.getDataFilePath("TLV_5.in"))
-bus_problem1 = BusProblem(2744, prob.orders)
-print()
+if __name__ == "__main__":
+    bp=BusProblem(34,[(54980,3423),(5325,2435)])
+    bs=BusState(34,[(54980,3423),(5325,2435)],[],[])
+    bs1=bp._getNewStateAtLoc(bs,5325)
+    bs1 = bp._getNewStateAtLoc(bs1, 2435)
+    bs1 = bp._getNewStateAtLoc(bs1, 54980)
+    if not bs1.isGoal():
+        print("OK")
+    bs1 = bp._getNewStateAtLoc(bs1, 3423)
+    if bs1.isGoal():
+        print("OK")
+
