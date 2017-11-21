@@ -1,4 +1,8 @@
-from . import Cost
+from cost import Cost
+from ways import load_map_from_csv
+from ways import tools
+from consts import Consts
+from states import *
 
 class L2DistanceCost(Cost):
     roads = None
@@ -12,4 +16,12 @@ class L2DistanceCost(Cost):
         coord2 = self.roads[toState.junctionIdx].coordinates
 
         # TODO : Return the correct value (call the suitable function from ways.tools)
-        raise NotImplementedError
+        return tools.compute_distance(coord1,coord2)
+
+if __name__ == "__main__":
+    roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
+    bs = BusState(34, [(54980, 3423), (5325, 2435)], [], [])
+    bs1 = BusState(342, [], [], [])
+    testobj=L2DistanceCost(roads)
+    print("hey")
+    print(testobj.compute(bs,bs1))

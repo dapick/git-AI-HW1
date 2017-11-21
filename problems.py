@@ -109,8 +109,6 @@ class BusProblem(Problem):
             else:
                 newOnBus.append(order)
         newFinished.extend(previousState.finishedOrders)
-
-
         return BusState(newLoc, newWaiting, newOnBus, newFinished)
 
     @staticmethod
@@ -130,7 +128,6 @@ class BusProblem(Problem):
 
 """ Tests """
 
-from consts import Consts
 
 
 if __name__ == "__main__":
