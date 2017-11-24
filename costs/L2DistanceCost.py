@@ -15,13 +15,14 @@ class L2DistanceCost(Cost):
         coord1 = self.roads[fromState.junctionIdx].coordinates
         coord2 = self.roads[toState.junctionIdx].coordinates
 
-        # TODO : Return the correct value (call the suitable function from ways.tools)
-        return tools.compute_distance(coord1,coord2)
+        # TODO : Done
+        return tools.compute_distance(coord1, coord2)
+
 
 if __name__ == "__main__":
     roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
     bs = BusState(34, [(54980, 3423), (5325, 2435)], [], [])
     bs1 = BusState(342, [], [], [])
-    testobj=L2DistanceCost(roads)
+    testobj = L2DistanceCost(roads)
     print("hey")
-    print(testobj.compute(bs,bs1))
+    print(testobj.compute(bs, bs1))

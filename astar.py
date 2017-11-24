@@ -61,7 +61,7 @@ class AStar:
             del open_set[next_state]
             closed_set.append(next_state)
             if problem.isGoal(next_state):
-                # TODO : VERY IMPORTANT: must return a tuple of (path, g_score(goal), h(I), developed)
+                # TODO : Done
                 return (self._reconstruct_path(parents, next_state),
                         self._calculate_path_cost(parents, g_score, next_state),
                         self.heuristic.estimate(problem, problem.initialState),
