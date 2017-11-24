@@ -61,7 +61,7 @@ class MapProblem(Problem):
 
     def expand(self, state):
         for l in self._roads[state.junctionIdx].links:
-            yield MapState(l.target, self._roads[state.junctionIdx].coordinates)
+            yield MapState(l.target, self._roads[l.target].coordinates)
 
     def isGoal(self, state):
         return state.junctionIdx == self.target.junctionIdx
@@ -129,11 +129,10 @@ class BusProblem(Problem):
 """ Tests """
 
 
-
 if __name__ == "__main__":
-    bp=BusProblem(34,[(54980,3423),(5325,2435)])
-    bs=BusState(34,[(54980,3423),(5325,2435)],[],[])
-    bs1=bp._getNewStateAtLoc(bs,5325)
+    bp = BusProblem(34, [(54980,3423), (5325,2435)])
+    bs = BusState(34, [(54980,3423), (5325,2435)], [], [])
+    bs1 = bp._getNewStateAtLoc(bs, 5325)
     bs1 = bp._getNewStateAtLoc(bs1, 2435)
     bs1 = bp._getNewStateAtLoc(bs1, 54980)
     if not bs1.isGoal():
