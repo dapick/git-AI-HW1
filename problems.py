@@ -100,16 +100,16 @@ class BusProblem(Problem):
         newOnBus = []
         newFinished = []
         for order in previousState.waitingOrders:
-            if order[0] == newLoc:
-                newOnBus.append(order)
+            if order[0] == newLoc:  # Reach to a source point of an order which waited
+                newOnBus.append(order)  # Add a new order to the bus
             else:
-                newWaiting.append(order)
+                newWaiting.append(order)  # Keep the orders in wait
         for order in previousState.ordersOnBus:
-            if order[1] == newLoc:
-                newFinished.append(order)
+            if order[1] == newLoc:  # Reach to a target point of an order which was on the bus
+                newFinished.append(order)  # Update that finished an order
             else:
-                newOnBus.append(order)
-        newFinished.extend(previousState.finishedOrders)
+                newOnBus.append(order)  # Keep the order in the bus
+        newFinished.extend(previousState.finishedOrders)  # Keep orders which were finished before
         return BusState(newLoc, newWaiting, newOnBus, newFinished)
 
     @staticmethod
@@ -131,8 +131,8 @@ class BusProblem(Problem):
 
 
 if __name__ == "__main__":
-    bp = BusProblem(34, [(54980,3423), (5325,2435)])
-    bs = BusState(34, [(54980,3423), (5325,2435)], [], [])
+    bp = BusProblem(34, [(54980, 3423), (5325, 2435)])
+    bs = BusState(34, [(54980, 3423), (5325, 2435)], [], [])
     bs1 = bp._getNewStateAtLoc(bs, 5325)
     bs1 = bp._getNewStateAtLoc(bs1, 2435)
     bs1 = bp._getNewStateAtLoc(bs1, 54980)
