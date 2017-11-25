@@ -1,6 +1,4 @@
 import abc
-
-
 class Problem(metaclass=abc.ABCMeta):
     initialState = None
 
@@ -13,33 +11,27 @@ class Problem(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     # Return the successors of a given state
-    def expand(self, state):
+    def expand(selfs, state):
         raise NotImplementedError
 
     # Return the successors with a cost for each successor (operator)
     def expandWithCosts(self, state, costComputer=None):
-        successors = self.expand(state)
-        listSucc=[]
         if costComputer is None:
-            for s in successors:
-                listSucc.append((s, self._calculateCost(state, s)))
+            for s in self.expand(state):
+                yield s, self._calculateCost(state, s)
         else:
-            for s in successors:
-                listSucc.append((s, self._calculateCost(state, s)))
-        return listSucc
+            for s in self.expand(state):
+                yield s, costComputer.compute(state, s)
 
     @abc.abstractmethod
     def isGoal(self, state):
         raise NotImplementedError
 
-
 from states import MapState
-
 
 class MapProblem(Problem):
     target = None
     _roads = None
-
     def __init__(self, roads, source, target):
         self._roads = roads
         I = MapState(source, roads[source].coordinates)
@@ -61,22 +53,17 @@ class MapProblem(Problem):
         raise ValueError
 
     def expand(self, state):
-        expandList = []
         for l in self._roads[state.junctionIdx].links:
-            expandList.append(MapState(l.target, self._roads[l.target].coordinates))
-        return expandList
+            yield MapState(l.target, self._roads[l.target].coordinates)
 
     def isGoal(self, state):
         return state.junctionIdx == self.target.junctionIdx
 
-
 from states import BusState
-
 
 class BusProblem(Problem):
     orders = None
-
-    def __init__(self, startingPoint: int, orders: list):
+    def __init__(self, startingPoint:int, orders:list):
         self.orders = orders
 
         I = BusState(startingPoint, self.orders.copy(), [], [])
@@ -90,31 +77,21 @@ class BusProblem(Problem):
 
     # Return all the successors of a given state
     def expand(self, state):
-        expandList=[]
         for order in state.waitingOrders:
-            expandList.append(self._getNewStateAtLoc(state, order[0]))
+            yield self._getNewStateAtLoc(state, order[0])
 
         for order in state.ordersOnBus:
-            expandList.append(self._getNewStateAtLoc(state, order[1]))
-        return expandList
+            yield self._getNewStateAtLoc(state, order[1])
 
     # Get the new state created after going from one state to a new location (on map)
     def _getNewStateAtLoc(self, previousState, newLoc):
-        # TODO : Done
+        # TODO : Implement
         newWaiting = []
         newOnBus = []
         newFinished = []
-        for order in previousState.waitingOrders:
-            if order[0] == newLoc:  # Reach to a source point of an order which waited
-                newOnBus.append(order)  # Add a new order to the bus
-            else:
-                newWaiting.append(order)  # Keep the orders in wait
-        for order in previousState.ordersOnBus:
-            if order[1] == newLoc:  # Reach to a target point of an order which was on the bus
-                newFinished.append(order)  # Update that finished an order
-            else:
-                newOnBus.append(order)  # Keep the order in the bus
-        newFinished.extend(previousState.finishedOrders)  # Keep orders which were finished before
+
+        raise NotImplementedError
+
         return BusState(newLoc, newWaiting, newOnBus, newFinished)
 
     @staticmethod
@@ -130,20 +107,3 @@ class BusProblem(Problem):
                 orders[i] = (int(order[0]), int(order[1]))
 
         return BusProblem(startingPoint, orders)
-
-
-""" Tests """
-
-
-if __name__ == "__main__":
-    bp = BusProblem(34, [(54980, 3423), (5325, 2435)])
-    bs = BusState(34, [(54980, 3423), (5325, 2435)], [], [])
-    bs1 = bp._getNewStateAtLoc(bs, 5325)
-    bs1 = bp._getNewStateAtLoc(bs1, 2435)
-    bs1 = bp._getNewStateAtLoc(bs1, 54980)
-    if not bs1.isGoal():
-        print("OK")
-    bs1 = bp._getNewStateAtLoc(bs1, 3423)
-    if bs1.isGoal():
-        print("OK")
-

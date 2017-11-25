@@ -61,14 +61,14 @@ class AStar:
             del open_set[next_state]
             closed_set.append(next_state)
             if problem.isGoal(next_state):
-                # TODO : Done
-                return (self._reconstruct_path(parents, next_state),
+                retVal=(self._reconstruct_path(parents, next_state),
                         self._calculate_path_cost(parents, g_score, next_state),
                         self.heuristic.estimate(problem, problem.initialState),
                         developed)
-            succ_list = problem.expandWithCosts(next_state, self.cost)
+                self._storeInCache(problem,retVal)
+                return retVal
             developed += 1
-            for succ_state, succ_state_cost in succ_list:
+            for succ_state, succ_state_cost in problem.expandWithCosts(next_state, self.cost):
                 new_g = g_score[next_state] + succ_state_cost
                 if succ_state in open_set:  # Checks if the son node was already in OPEN
                     if new_g < g_score[succ_state]:  # Checks if found a better path for the node
