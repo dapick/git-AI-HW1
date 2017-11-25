@@ -19,13 +19,14 @@ class Problem(metaclass=abc.ABCMeta):
     # Return the successors with a cost for each successor (operator)
     def expandWithCosts(self, state, costComputer=None):
         successors = self.expand(state)
-
+        listSucc=[]
         if costComputer is None:
             for s in successors:
-                yield s, self._calculateCost(state, s)
+                listSucc.append((s, self._calculateCost(state, s)))
         else:
             for s in successors:
-                yield s, costComputer.compute(state, s)
+                listSucc.append((s, self._calculateCost(state, s)))
+        return listSucc
 
     @abc.abstractmethod
     def isGoal(self, state):
@@ -60,8 +61,10 @@ class MapProblem(Problem):
         raise ValueError
 
     def expand(self, state):
+        expandList = []
         for l in self._roads[state.junctionIdx].links:
-            yield MapState(l.target, self._roads[l.target].coordinates)
+            expandList.append(MapState(l.target, self._roads[l.target].coordinates))
+        return expandList
 
     def isGoal(self, state):
         return state.junctionIdx == self.target.junctionIdx
@@ -87,11 +90,13 @@ class BusProblem(Problem):
 
     # Return all the successors of a given state
     def expand(self, state):
+        expandList=[]
         for order in state.waitingOrders:
-            yield self._getNewStateAtLoc(state, order[0])
+            expandList.append(self._getNewStateAtLoc(state, order[0]))
 
         for order in state.ordersOnBus:
-            yield self._getNewStateAtLoc(state, order[1])
+            expandList.append(self._getNewStateAtLoc(state, order[1]))
+        return expandList
 
     # Get the new state created after going from one state to a new location (on map)
     def _getNewStateAtLoc(self, previousState, newLoc):

@@ -8,9 +8,6 @@ class GreedyBestFirstSolver(GreedySolver):
     # Find the next state to develop
     def _getNextState(self, problem, currState):
         successors = list(problem.expand(currState))
+        minSucc= min(successors, key=lambda succ : self._scorer(currState,succ))
+        return minSucc
 
-        # TODO : Return the next state
-        raise NotImplementedError
-
-        bestIdx = None
-        return successors[bestIdx]

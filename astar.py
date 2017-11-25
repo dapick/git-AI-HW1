@@ -70,13 +70,13 @@ class AStar:
             developed += 1
             for succ_state, succ_state_cost in succ_list:
                 new_g = g_score[next_state] + succ_state_cost
-                if open_set.__contains__(succ_state):  # Checks if the son node was already in OPEN
+                if succ_state in open_set:  # Checks if the son node was already in OPEN
                     if new_g < g_score[succ_state]:  # Checks if found a better path for the node
                         g_score[succ_state] = new_g
                         parents[succ_state] = next_state
                         open_set[succ_state] = g_score[succ_state] + self.heuristic.estimate(problem, succ_state)
                 else:
-                    if closed_set.__contains__(succ_state):  # Checks if the son node was already in CLOSED
+                    if succ_state in closed_set:  # Checks if the son node was already in CLOSED
                         if new_g < g_score[succ_state]:  # Checks if found a better path for the node
                             g_score[succ_state] = new_g
                             parents[succ_state] = next_state
@@ -110,10 +110,10 @@ class AStar:
     @staticmethod
     def _calculate_path_cost(parents: dict, g_score: dict, goal) -> int:
         path_cost = 0
-        while goal:
-            path_cost += g_score[goal]
-            goal = parents.get(goal)
-        return path_cost
+        #while goal:
+            #path_cost += g_score[goal]
+            #goal = parents.get(goal)
+        return g_score[goal]
 
 
 
