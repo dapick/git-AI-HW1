@@ -131,6 +131,7 @@ class BusProblem(Problem):
 
 
 if __name__ == "__main__":
+    """ Test for _getNewStateAtLoc """
     bp = BusProblem(34, [(54980, 3423), (5325, 2435)])
     bs = BusState(34, [(54980, 3423), (5325, 2435)], [], [])
     bs1 = bp._getNewStateAtLoc(bs, 5325)
@@ -141,4 +142,3 @@ if __name__ == "__main__":
     bs1 = bp._getNewStateAtLoc(bs1, 3423)
     if bs1.isGoal():
         print("OK")
-

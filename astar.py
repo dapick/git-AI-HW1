@@ -63,12 +63,12 @@ class AStar:
             if problem.isGoal(next_state):
                 # TODO : Done
                 return (self._reconstruct_path(parents, next_state),
-                        self._calculate_path_cost(parents, g_score, next_state),
+                        g_score[next_state],
                         self.heuristic.estimate(problem, problem.initialState),
                         developed)
-            succ_list = problem.expandWithCosts(next_state, self.cost)
+
             developed += 1
-            for succ_state, succ_state_cost in succ_list:
+            for succ_state, succ_state_cost in problem.expandWithCosts(next_state, self.cost):
                 new_g = g_score[next_state] + succ_state_cost
                 if open_set.__contains__(succ_state):  # Checks if the son node was already in OPEN
                     if new_g < g_score[succ_state]:  # Checks if found a better path for the node
@@ -88,6 +88,7 @@ class AStar:
                         open_set[succ_state] = g_score[succ_state] + \
                                                self.heuristic.estimate(problem, succ_state)
 
+    # Returns the state with the lowest f from OPEN
     @staticmethod
     def _get_open_state_with_lowest_f_score(open_set: dict):
         min_f = float("inf")
@@ -106,15 +107,6 @@ class AStar:
             path_list.insert(0, goal)
             goal = parents.get(goal)
         return path_list
-
-    @staticmethod
-    def _calculate_path_cost(parents: dict, g_score: dict, goal) -> int:
-        path_cost = 0
-        while goal:
-            path_cost += g_score[goal]
-            goal = parents.get(goal)
-        return path_cost
-
 
 
 
