@@ -1,4 +1,4 @@
-from cost import Cost
+from .cost import Cost
 from ways import load_map_from_csv
 from ways import tools
 from consts import Consts
