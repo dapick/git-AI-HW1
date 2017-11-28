@@ -62,10 +62,12 @@ class AStar:
             closed_set.append(next_state)
             if problem.isGoal(next_state):
                 # TODO : Done
-                return (self._reconstruct_path(parents, next_state),
-                        g_score[next_state],
-                        self.heuristic.estimate(problem, problem.initialState),
-                        developed)
+                new_cache_value = (self._reconstruct_path(parents, next_state),
+                                   g_score[next_state],
+                                   self.heuristic.estimate(problem, problem.initialState),
+                                   developed)
+                self._storeInCache(problem, new_cache_value)
+                return new_cache_value
 
             developed += 1
             for succ_state, succ_state_cost in problem.expandWithCosts(next_state, self.cost):
