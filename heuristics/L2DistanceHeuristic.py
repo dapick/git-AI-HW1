@@ -11,12 +11,13 @@ class L2DistanceHeuristic(Heuristic):
         coord2 = problem._roads[problem.target.junctionIdx].coordinates
 
         # TODO : Return the correct value (call the suitable function from ways.tools)
-        return tools.compute_distance(coord1,coord2)
+        return tools.compute_distance(coord1, coord2)
+
 
 if __name__ == "__main__":
     roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
-    mp=MapProblem(roads,50343,5413)
+    mp = MapProblem(roads, 50343, 5413)
     bs1 = BusState(342, [], [], [])
-    testobj=L2DistanceHeuristic()
+    test_obj = L2DistanceHeuristic()
     print("hey")
-    print(testobj.estimate(mp,bs1))
+    print(test_obj.estimate(mp, bs1))
