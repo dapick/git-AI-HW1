@@ -43,7 +43,7 @@ class AStar:
                 return res
 
         # Initializes the required sets
-        closed_set = []  # The list of nodes already evaluated.
+        closed_set = set()  # The set of nodes already evaluated.
         parents = {}  # The map of navigated nodes.
 
         # Save the g_score and f_score for the open nodes
@@ -53,15 +53,12 @@ class AStar:
         developed = 0  # Number of times we called succ
 
         # Tips:
-        # - To get the successor states of a state with their costs, use: problem.expandWithCosts(state, self.cost)
         # - You should break your code into methods (two such stubs are written below)
-        # - Don't forget to cache your result between returning it - TODO
         while open_set:
             next_state = self._get_open_state_with_lowest_f_score(open_set)
             del open_set[next_state]
-            closed_set.append(next_state)
+            closed_set = closed_set | {next_state}
             if problem.isGoal(next_state):
-                # TODO : Done
                 new_cache_value = (self._reconstruct_path(parents, next_state),
                                    g_score[next_state],
                                    self.heuristic.estimate(problem, problem.initialState),
