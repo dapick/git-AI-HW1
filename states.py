@@ -44,7 +44,4 @@ class BusState(State):
                 (other.junctionIdx, other.waitingOrders, other.ordersOnBus))
 
     def isGoal(self):
-        if len(self.waitingOrders) == 0 and len(self.ordersOnBus) == 0:
-            return True
-        else:
-            return False
+        return not self.waitingOrders and not self.ordersOnBus

@@ -9,11 +9,8 @@ from problems import MapProblem
 # Use the L2 aerial distance (in meters)
 class L2DistanceHeuristic(Heuristic):
     def estimate(self, problem, state):
-        coord1 = problem._roads[state.junctionIdx].coordinates
-        coord2 = problem._roads[problem.target.junctionIdx].coordinates
-
         # TODO : Done
-        return tools.compute_distance(coord1, coord2)
+        return tools.compute_distance(state.coordinates, problem.target.coordinates)
 
 
 if __name__ == "__main__":

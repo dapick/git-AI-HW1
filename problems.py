@@ -96,21 +96,15 @@ class BusProblem(Problem):
     # Get the new state created after going from one state to a new location (on map)
     def _getNewStateAtLoc(self, previousState, newLoc):
         # TODO : Done
-        newWaiting = []
-        newOnBus = []
-        newFinished = []
-        for order in previousState.waitingOrders:
-            if order[0] == newLoc:  # Reach to a source point of an order which waited
-                newOnBus.append(order)  # Add a new order to the bus
-            else:
-                newWaiting.append(order)  # Keep the orders in wait
-        for order in previousState.ordersOnBus:
-            if order[1] == newLoc:  # Reach to a target point of an order which was on the bus
-                newFinished.append(order)  # Update that finished an order
-            else:
-                newOnBus.append(order)  # Keep the order in the bus
-        newFinished.extend(previousState.finishedOrders)  # Keep orders which were finished before
-        return BusState(newLoc, newWaiting, newOnBus, newFinished)
+        updated_waiting_orders = list(filter(lambda order: order[0] != newLoc, previousState.waitingOrders))
+        updated_orders_on_bus = list(set().union(
+            filter(lambda order: order[1] != newLoc, previousState.ordersOnBus),
+            filter(lambda order: order[0] == newLoc, previousState.waitingOrders)))
+        updated_finished_orders = list(set().union(
+            previousState.finishedOrders,
+            filter(lambda order: order[1] == newLoc, previousState.ordersOnBus)))
+        return BusState(newLoc, updated_waiting_orders, updated_orders_on_bus, updated_finished_orders)
+
 
     @staticmethod
     def load(filepath):
@@ -137,8 +131,6 @@ if __name__ == "__main__":
     bs1 = bp._getNewStateAtLoc(bs, 5325)
     bs1 = bp._getNewStateAtLoc(bs1, 2435)
     bs1 = bp._getNewStateAtLoc(bs1, 54980)
-    if not bs1.isGoal():
-        print("OK")
+    assert not bs1.isGoal()
     bs1 = bp._getNewStateAtLoc(bs1, 3423)
-    if bs1.isGoal():
-        print("OK")
+    assert bs1.isGoal()
