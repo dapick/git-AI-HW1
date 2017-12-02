@@ -43,24 +43,25 @@ class AStar:
                 return res
 
         # Initializes the required sets
-        closed_set = set()  # The set of nodes already evaluated.
+        closed_set = {source: 0}  # The dict of nodes already evaluated. The g is the value
         parents = {}  # The map of navigated nodes.
 
         # Save the g_score and f_score for the open nodes
-        g_score = {source: 0}
-        open_set = {source: self.heuristic.estimate(problem, problem.initialState)}
+        open_set = {source: (self.heuristic.estimate(problem, problem.initialState), 0)}
 
         developed = 0  # Number of times we called succ
 
         # Tips:
         # - You should break your code into methods (two such stubs are written below)
         while open_set:
-            next_state = self._get_open_state_with_lowest_f_score(open_set)
+            next_state_tuple = self._get_open_state_with_lowest_f_score(open_set)
+            next_state = next_state_tuple[0]
+            closed_set[next_state] = next_state_tuple[1]
             del open_set[next_state]
-            closed_set = closed_set | {next_state}
+
             if problem.isGoal(next_state):
                 new_cache_value = (self._reconstruct_path(parents, next_state),
-                                   g_score[next_state],
+                                   closed_set[next_state],
                                    self.heuristic.estimate(problem, problem.initialState),
                                    developed)
                 self._storeInCache(problem, new_cache_value)
@@ -68,35 +69,33 @@ class AStar:
 
             developed += 1
             for succ_state, succ_state_cost in problem.expandWithCosts(next_state, self.cost):
-                new_g = g_score[next_state] + succ_state_cost
-                if open_set.__contains__(succ_state):  # Checks if the son node was already in OPEN
-                    if new_g < g_score[succ_state]:  # Checks if found a better path for the node
-                        g_score[succ_state] = new_g
+                new_g = closed_set[next_state] + succ_state_cost
+                if succ_state in open_set:  # Checks if the son node was already in OPEN
+                    if new_g < open_set[succ_state][1]:  # Checks if found a better path for the node
                         parents[succ_state] = next_state
-                        open_set[succ_state] = g_score[succ_state] + self.heuristic.estimate(problem, succ_state)
+                        open_set[succ_state] = (new_g + self.heuristic.estimate(problem, succ_state), new_g)
                 else:
-                    if closed_set.__contains__(succ_state):  # Checks if the son node was already in CLOSED
-                        if new_g < g_score[succ_state]:  # Checks if found a better path for the node
-                            g_score[succ_state] = new_g
+                    if succ_state in closed_set:  # Checks if the son node was already in CLOSED
+                        if new_g < closed_set[succ_state]:  # Checks if found a better path for the node
                             parents[succ_state] = next_state
-                            closed_set.remove(succ_state)
-                            open_set[succ_state] = g_score[succ_state] + self.heuristic.estimate(problem, succ_state)
+                            closed_set.pop(succ_state)
+                            open_set[succ_state] = (new_g + self.heuristic.estimate(problem, succ_state), new_g)
                     else:  # Found a new node
-                        g_score[succ_state] = new_g
                         parents[succ_state] = next_state
-                        open_set[succ_state] = g_score[succ_state] + \
-                                               self.heuristic.estimate(problem, succ_state)
+                        open_set[succ_state] = (new_g + self.heuristic.estimate(problem, succ_state), new_g)
 
     # Returns the state with the lowest f from OPEN
     @staticmethod
     def _get_open_state_with_lowest_f_score(open_set: dict):
         min_f = float("inf")
-        min_state_f = 0
-        for state, state_f_value in open_set.items():
-            if state_f_value < min_f:
-                min_f = state_f_value
-                min_state_f = state
-        return min_state_f
+        min_state = 0
+        min_state_g = 0
+        for state, values in open_set.items():
+            if values[0] < min_f:
+                min_f = values[0]
+                min_state = state
+                min_state_g = values[1]
+        return min_state, min_state_g
 
     # Reconstruct the path from a given goal by its parent and so on
     @staticmethod
@@ -106,7 +105,3 @@ class AStar:
             path_list.insert(0, goal)
             goal = parents.get(goal)
         return path_list
-
-
-
-
