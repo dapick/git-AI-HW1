@@ -40,10 +40,16 @@ print("\nDone!")
 from matplotlib import pyplot as plt
 X=np.array(range(REPEATS))
 Y=np.array([np.amin(results[:i+1]) for i in range(REPEATS)])
-plt.plot(X,Y)
+plt.title("Minimum distance as a function of repeats")
+plt.xlabel('REPEATS')
+plt.ylabel('Minimum Distance')
+plt.plot(X,Y, label= "Greedy Stochastic")
 plt.grid(True)
 plt.show(block=False)
-plt.plot(X,greedyDistance)
+greedyDistance_value_line=np.array([greedyDistance]*150)
+plt.plot(X,greedyDistance_value_line, label= "Greedy")
+plt.legend(bbox_to_anchor=(1, 1),
+               bbox_transform=plt.gcf().transFigure)
 plt.waitforbuttonpress()
 # TODO : Part2 - Remove the exit and perform the t-test
 avg_of_samples=np.sum(results)/150
