@@ -6,6 +6,7 @@ from problems import BusProblem
 from costs import L2DistanceCost
 from heuristics import L2DistanceHeuristic
 import numpy as np
+from scipy import stats
 
 REPEATS = 150
 
@@ -37,8 +38,18 @@ print("\nDone!")
 
 # TODO : Part1 - Plot the diagram required in the instructions
 from matplotlib import pyplot as plt
-raise NotImplementedError
-
-
+X=np.array(range(REPEATS))
+Y=np.array([np.amin(results[:i+1]) for i in range(REPEATS)])
+plt.plot(X,Y)
+plt.grid(True)
+plt.show(block=False)
+plt.plot(X,greedyDistance)
+plt.waitforbuttonpress()
 # TODO : Part2 - Remove the exit and perform the t-test
-raise NotImplementedError
+avg_of_samples=np.sum(results)/150
+print("{} avg of samples ".format(avg_of_samples))
+deviation_samples=np.sqrt(np.sum(np.power(avg_of_samples-results,2))/150)
+print("{} deviation of samples ".format(deviation_samples))
+another_value_no_idea,p_value=stats.ttest_1samp(results,greedyDistance)
+print(another_value_no_idea)
+print(p_value)

@@ -1,8 +1,9 @@
-from .cost import Cost
+
 from ways import load_map_from_csv
 from ways import tools
 from consts import Consts
 from states import *
+from .cost import Cost
 
 class L2DistanceCost(Cost):
     roads = None
