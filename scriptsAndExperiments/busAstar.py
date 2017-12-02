@@ -45,7 +45,7 @@ print("A* (null heuristic):\tg(G)={:.2f}km, h(I)={:.2f}km, developed: {} states"
 # exit()
 
 # Run A* with the custom heuristic
-customH = TSPCustomHeuristic(roads)
+customH = TSPCustomHeuristic(roads, prob.initialState)
 busAstar = AStar(customH, cost=ActualDistanceCost(roads, mapAstar))
 _,gBus,hVal,developed = busAstar.run(prob)
 print("A* (Custom heuristic):\tg(G)={:.2f}km, h(I)={:.2f}km, developed: {} states".format(gBus/1000, hVal/1000, developed))

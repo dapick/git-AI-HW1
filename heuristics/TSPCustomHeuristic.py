@@ -11,7 +11,7 @@ class TSPCustomHeuristic(Heuristic):
     map_astar = None
 
     # TODO : Done
-    def __init__(self, roads):
+    def __init__(self, roads, initial_state):
         super().__init__()
         self.roads = roads
         self.map_astar = AStar(L2DistanceHeuristic(), shouldCache=True)
