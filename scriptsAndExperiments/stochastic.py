@@ -36,8 +36,9 @@ for i in range(REPEATS):
 
 print("\nDone!")
 
-# TODO : Part1 - Plot the diagram required in the instructions
+#PART 1
 from matplotlib import pyplot as plt
+#plot the minimum value for i first iterations
 X=np.array(range(REPEATS))
 Y=np.array([np.amin(results[:i+1]) for i in range(REPEATS)])
 plt.title("Minimum distance as a function of repeats")
@@ -46,16 +47,17 @@ plt.ylabel('Minimum Distance')
 plt.plot(X,Y, label= "Greedy Stochastic")
 plt.grid(True)
 plt.show(block=False)
+#plot the greedy distance value
 greedyDistance_value_line=np.array([greedyDistance]*150)
 plt.plot(X,greedyDistance_value_line, label= "Greedy")
 plt.legend(bbox_to_anchor=(1, 1),
                bbox_transform=plt.gcf().transFigure)
 plt.waitforbuttonpress()
-# TODO : Part2 - Remove the exit and perform the t-test
+
+#PART 2
 avg_of_samples=np.sum(results)/150
 print("{} avg of samples ".format(avg_of_samples))
 deviation_samples=np.sqrt(np.sum(np.power(avg_of_samples-results,2))/150)
 print("{} deviation of samples ".format(deviation_samples))
-another_value_no_idea,p_value=stats.ttest_1samp(results,greedyDistance)
-print(another_value_no_idea)
-print(p_value)
+_,p_value=stats.ttest_1samp(results,greedyDistance)
+print("{} p value",p_value)
