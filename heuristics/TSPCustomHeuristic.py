@@ -19,13 +19,10 @@ class TSPCustomHeuristic(Heuristic):
     # Estimate heuristically the minimal cost from the given state to the problem's goal
     def estimate(self, problem, state):
         max_distance = 0
-        for order_i in state.waitingOrders:
-            source = order_i[0]
-            for order_j in state.waitingOrders:
-                target = order_j[1]
-                orders_problem = MapProblem(self.roads, source, target)
-                _, orders_distance, _, _ = self.map_astar.run(orders_problem)
+        for order in state.waitingOrders:
+            orders_problem = MapProblem(self.roads, order[0], order[1])
+            _, orders_distance, _, _ = self.map_astar.run(orders_problem)
 
-                if orders_distance > max_distance:
-                    max_distance = orders_distance
+            if orders_distance > max_distance:
+                max_distance = orders_distance
         return max_distance
